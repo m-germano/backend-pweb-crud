@@ -1,6 +1,7 @@
 import app from './app'
 
-const PORT = Number(process.env.PORT || 3333)
-app.listen(PORT, () => {
-  console.log(`GeoInfo Manager API listening on http://localhost:${PORT}`)
-})
+const port = process.env.PORT ? Number(process.env.PORT) : 3333;
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`API on http://0.0.0.0:${port}`);
+});
