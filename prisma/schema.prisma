@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Continent {
+  id          String    @id @default(uuid())
+  nome        String    @unique
+  descricao   String?
+  countries   Country[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Country {
+  id             String    @id @default(uuid())
+  nome           String
+  populacao      Int
+  idiomaOficial  String
+  moeda          String
+  fusoHorario    String?
+  iso2           String?   @unique
+  continentId    String
+  continent      Continent  @relation(fields: [continentId], references: [id], onDelete: Cascade)
+  cities         City[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([continentId])
+  @@unique([nome, continentId])
+}
+
+model City {
+  id         String   @id @default(uuid())
+  nome       String
+  populacao  Int
+  latitude   Decimal  @db.Decimal(9, 6)
+  longitude  Decimal  @db.Decimal(9, 6)
+  countryId  String
+  country    Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([countryId])
+  @@unique([nome, countryId])
+}
